@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: a308fcbb158f63848b0972e4bab36409
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: 'Hapna b Serif '
+  fontNames:
+  - 'Hapna b Serif '
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 7ddb7bb0f4cb00a4db8bfea700c8c6f4, type: 3}
+  - {fileID: 12800000, guid: 53effa7173757d540a7bdd32b09769cc, type: 3}
+  - {fileID: 12800000, guid: 9762a06c3fde0f04a8b86a313f82d0fb, type: 3}
+  - {fileID: 12800000, guid: 4d053abd2f83c634683ada79c1f0b911, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
