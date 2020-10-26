@@ -47,13 +47,28 @@ public class PhaseManager : Singleton<PhaseManager>
         
     }
 
+    public bool PrevPhaseComplete()
+    {
+        if (Phases[CurrentPhase.phaseID - 1].phaseComplete == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     /// <summary>
     /// Spawns enemies and objects for the next uncompleted phase
     /// </summary>
     public void SpawnNextPhase()
     {
         Phase nextPhase = FindNextUncompletedPhase();
-        nextPhase.SpawnPhase();
+
+        CurrentPhase = nextPhase;
+
+        nextPhase.SpawnEnemies();
     }
 
     /// <summary>
@@ -64,7 +79,7 @@ public class PhaseManager : Singleton<PhaseManager>
     {
         foreach (Phase phase in Phases)
         {
-            if (phase.PhaseComplete == false)
+            if (phase.phaseComplete == false)
             {
                 return phase;
             }

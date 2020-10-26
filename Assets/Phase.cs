@@ -8,14 +8,15 @@ using UnityEngine;
 public class Phase : MonoBehaviour
 {
     [Header("System Tracking")]
-    [SerializeField] protected int phaseID = 0;
+    public int phaseID = 0;
 
     [Header("Object Lists")]
     [SerializeField] protected List<GameObject> enemyPhase;
     [SerializeField] protected List<GameObject> objectPhase;
 
-    [ReadOnly] public bool PhaseComplete = false;
-    [ReadOnly] private bool PhaseSpawned = false;
+    [ReadOnly] public bool phaseComplete = false;
+    [ReadOnly] private bool _PhaseSpawned = false;
+    [ReadOnly] private bool _PrevPhaseComplete = false;
 
     /// <summary>
     /// Awake is called once at the beginning of the scene
@@ -30,18 +31,31 @@ public class Phase : MonoBehaviour
     /// </summary>
     protected void Update()
     {
-        if (!PhaseComplete)
+        if (!phaseComplete)
         {
-            if (!PhaseSpawned)
+            if (phaseID == 0)
             {
-                SpawnPhase();
-                PhaseSpawned = true;
+                _PrevPhaseComplete = true;
+            }
+            else
+            {
+                _PrevPhaseComplete = PhaseManager.Instance.PrevPhaseComplete();
             }
 
-            if (CheckEnemies() == true)
+            if (_PrevPhaseComplete)
             {
-                PhaseComplete = true;
-                DespawnEnemies();
+                if (!_PhaseSpawned)
+                {
+                    SpawnEnemies();
+                    SpawnObjects();
+                    _PhaseSpawned = true;
+                }
+
+                if (CheckEnemies() == true)
+                {
+                    phaseComplete = true;
+                    Invoke("DespawnEnemies", 2.0f);
+                }
             }
         }
         else
@@ -53,24 +67,33 @@ public class Phase : MonoBehaviour
     /// <summary>
     /// Spawns all enemies in the phase.
     /// </summary>
-    public void SpawnPhase()
+    public void SpawnEnemies()
     {
         foreach (GameObject enemy in enemyPhase)
         {
             enemy.SetActive(true);
         }
-
-        foreach (GameObject gameObject in objectPhase)
-        {
-            gameObject.SetActive(true);
-        }
     }
 
+    /// <summary>
+    /// Despawns all enemies in the phase.
+    /// </summary>
     protected void DespawnEnemies()
     {
         foreach (GameObject enemy in enemyPhase)
         {
             enemy.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Spawns all objects in the phase.
+    /// </summary>
+    public void SpawnObjects()
+    {
+        foreach (GameObject gameObject in objectPhase)
+        {
+            gameObject.SetActive(true);
         }
     }
 
