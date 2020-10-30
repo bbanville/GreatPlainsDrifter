@@ -13,14 +13,14 @@ public class BattleZoneTrigger : MonoBehaviour
     public event EventHandler OnPlayerTriggerEnter;
     public event EventHandler OnPlayerTriggerExit;
 
-    private GameManager m_GameManager;
+    private LevelManager m_LevelManager;
 
     /// <summary>
     /// Initialize the default values.
     /// </summary>
     private void Awake()
     {
-        m_GameManager = GetComponentInParent<GameManager>();
+        m_LevelManager = GetComponentInParent<LevelManager>();
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class BattleZoneTrigger : MonoBehaviour
         }
 
         OnPlayerTriggerEnter?.Invoke(this, EventArgs.Empty);
-        m_GameManager.EnteredTriggerZone(this, other.gameObject);
+        m_LevelManager.EnteredTriggerZone(this, other.gameObject);
     }
 
     /// <summary>
@@ -57,6 +57,6 @@ public class BattleZoneTrigger : MonoBehaviour
         }
 
         OnPlayerTriggerExit?.Invoke(this, EventArgs.Empty);
-        m_GameManager.ExitedTriggerZone(this);
+        m_LevelManager.ExitedTriggerZone(this);
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using Opsive.UltimateCharacterController.Demo.BehaviorDesigner;
+//using Opsive.UltimateCharacterController.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ public class BattleSystem : MonoBehaviour
     /// <summary>
     /// Represents a single Enemy Spawn Wave
     /// </summary>
-    [Serializable]
+    [System.Serializable]
     public class Wave
     {
         public Transform enemySpawnContainer;
@@ -46,12 +47,14 @@ public class BattleSystem : MonoBehaviour
 
     private void Start()
     {
+        //EventHandler.RegisterEvent<Vector3, Vector3, GameObject>("StartBattleTrigger_OnPlayerTriggerEnter", StartBattleTrigger_OnPlayerTriggerEnter);
         startBattleTrigger.OnPlayerTriggerEnter += StartBattleTrigger_OnPlayerTriggerEnter;
     }
 
     private void StartBattleTrigger_OnPlayerTriggerEnter(object sender, System.EventArgs e)
     {
         StartBattle();
+        //EventHandler.UnregisterEvent<Vector3, Vector3, GameObject>("StartBattleTrigger_OnPlayerTriggerEnter", StartBattleTrigger_OnPlayerTriggerEnter);
         startBattleTrigger.OnPlayerTriggerEnter -= StartBattleTrigger_OnPlayerTriggerEnter;
     }
 
