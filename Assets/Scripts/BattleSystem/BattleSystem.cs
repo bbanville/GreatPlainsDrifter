@@ -1,4 +1,5 @@
 ﻿
+using BrendonBanville.Tools;
 using Opsive.UltimateCharacterController.Demo.BehaviorDesigner;
 //using Opsive.UltimateCharacterController.Events;
 using System;
@@ -10,7 +11,11 @@ namespace Opsive.UltimateCharacterController.Demo
 {
     public class BattleSystem : MonoBehaviour
     {
+        [SerializeField] protected DemoZoneTrigger startBattleTrigger;
+
+        //[ReadOnly] public EventHandler OnBattleStarted;
         public event EventHandler OnBattleStarted;
+        //[ReadOnly] public EventHandler OnBattleEnded;
         public event EventHandler OnBattleEnded;
 
         private enum State
@@ -26,16 +31,22 @@ namespace Opsive.UltimateCharacterController.Demo
         [System.Serializable]
         public class Wave
         {
+            public string waveTitle;
+
+            [Header("Enemies")]
             public Transform enemySpawnContainer;
             public DemoAgent[] enemyAgentArray;
 
+            [Header("Spawn Condition")]
+            [Tooltip("Delay from start of battle before spawning this wave")]
             public float time;
-            public bool alreadySpawned;
+
+            [Tooltip("Has the enemies in this wave already been spawned?")]
+            [ReadOnly] public bool alreadySpawned;
         }
 
         [SerializeField] private Wave[] waveArray;
 
-        [SerializeField] private DemoZoneTrigger startBattleTrigger;
         //[SerializeField] private DoorAnims doorAnims;
 
         private State state;
@@ -49,15 +60,17 @@ namespace Opsive.UltimateCharacterController.Demo
 
         private void Start()
         {
-            //EventHandler.RegisterEvent<Vector3, Vector3, GameObject>("StartBattleTrigger_OnPlayerTriggerEnter", StartBattleTrigger_OnPlayerTriggerEnter);
+            Debug.Log("Battle Registered");
             startBattleTrigger.OnPlayerTriggerEnter += StartBattleTrigger_OnPlayerTriggerEnter;
+            //EventHandler.RegisterEvent("StartBattleTrigger_OnPlayerTriggerEnter", StartBattleTrigger_OnPlayerTriggerEnter);
         }
 
         private void StartBattleTrigger_OnPlayerTriggerEnter(object sender, System.EventArgs e)
         {
             StartBattle();
-            //EventHandler.UnregisterEvent<Vector3, Vector3, GameObject>("StartBattleTrigger_OnPlayerTriggerEnter", StartBattleTrigger_OnPlayerTriggerEnter);
+            Debug.Log("Battle Triggered");
             startBattleTrigger.OnPlayerTriggerEnter -= StartBattleTrigger_OnPlayerTriggerEnter;
+            // EventHandler.UnregisterEvent("StartBattleTrigger_OnPlayerTriggerEnter", StartBattleTrigger_OnPlayerTriggerEnter);
         }
 
         private void Update()
@@ -65,6 +78,8 @@ namespace Opsive.UltimateCharacterController.Demo
             switch (state)
             {
                 case State.Active:
+                    Debug.Log("Battle Active");
+
                     foreach (Wave wave in waveArray)
                     {
                         if (wave.alreadySpawned) continue; // Wave already spawned
@@ -117,6 +132,7 @@ namespace Opsive.UltimateCharacterController.Demo
             //    doorAnims.CloseDoor();
             //}
 
+            //EventHandler.ExecuteEvent("OnBattleStarted");
             OnBattleStarted?.Invoke(this, EventArgs.Empty);
         }
 
@@ -128,6 +144,7 @@ namespace Opsive.UltimateCharacterController.Demo
             //    FunctionTimer.Create(doorAnims.OpenDoor, 1.5f);
             //}
 
+            //EventHandler.ExecuteEvent("OnBattleEnded");
             OnBattleEnded?.Invoke(this, EventArgs.Empty);
         }
 
