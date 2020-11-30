@@ -14,6 +14,8 @@ namespace Opsive.UltimateCharacterController.Traits
     /// </summary>
     public class CharacterRespawner : Respawner
     {
+        public bool playerCharacter;
+
         private bool m_Active;
 
         /// <summary>
@@ -41,6 +43,11 @@ namespace Opsive.UltimateCharacterController.Traits
             // Execute OnCharacterImmediateTransformChange after OnRespawn to ensure all of the interested components are using the new position/rotation.
             if (transformChange) {
                 EventHandler.ExecuteEvent(m_GameObject, "OnCharacterImmediateTransformChange", true);
+            }
+
+            if (playerCharacter)
+            {
+                
             }
         }
 

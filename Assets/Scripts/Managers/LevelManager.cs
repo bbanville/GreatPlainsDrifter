@@ -268,8 +268,8 @@ public class LevelManager : Singleton<GameManager>
         }
 
         // The cursor needs to be visible.
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.None;
+        //Cursor.visible = true;
 
         #if FIRST_PERSON_CONTROLLER && THIRD_PERSON_CONTROLLER
         // Show the perspective selection menu.
@@ -296,8 +296,8 @@ public class LevelManager : Singleton<GameManager>
     /// </summary>
     private void Update()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.None;
+        //Cursor.visible = true;
     }
 
     ///// <summary>

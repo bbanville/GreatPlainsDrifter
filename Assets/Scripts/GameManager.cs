@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using BrendonBanville.Managers;
 using Assets.Scripts.Managers;
+using System;
 
 namespace BrendonBanville.Tools
 {
@@ -106,6 +107,17 @@ namespace BrendonBanville.Tools
         /// true if the game is currently paused
         public bool Paused { get; set; }
 
+        [Header("Level Information")]
+        public int TotalEnemies = 0;
+        public int EnemyKills { get; private set; } = 0;
+        public int TotalWeapons = 0;
+        public int WeaponsFound { get; private set; } = 0;
+        public int TotalSecrets = 0;
+        public int SecretsFound { get; private set; } = 0;
+        public float GameTime { get; private set; }
+        [ReadOnly] public string GameTimeFormatted = "";
+
+        [Header("Scene Changing")]
         public GameObject faderObj;
         public Image faderImg;
         public float fadeSpeed = .02f;
@@ -152,6 +164,8 @@ namespace BrendonBanville.Tools
             {
                 SM.Outside.TransitionTo(1.0f);
             }
+
+            GameTime = 0.0f;
         }
 
         public void Update()
@@ -171,6 +185,8 @@ namespace BrendonBanville.Tools
                     EngineEvent.Trigger(EngineEventTypes.Pause);
                 }
             }
+
+            SetGameTime();
         }
 
         /// <summary>
@@ -199,6 +215,33 @@ namespace BrendonBanville.Tools
         public virtual void SetPoints(int points)
         {
             Points = points;
+        }
+
+        public virtual void SetGameTime()
+        {
+            GameTime += Time.deltaTime;
+
+            int intTime = (int)GameTime;
+            int minutes = intTime / 60;
+            int seconds = intTime % 60;
+            float fraction = GameTime * 1000;
+            fraction = (fraction % 1000);
+            GameTimeFormatted = string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, fraction);
+        }
+
+        public virtual void KilledEnemy()
+        {
+            EnemyKills++;
+        }
+
+        public virtual void FoundWeapon()
+        {
+            WeaponsFound++;
+        }
+
+        public virtual void FoundSecret()
+        {
+            SecretsFound++;
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Opsive.UltimateCharacterController.Demo
 {
@@ -15,8 +16,10 @@ namespace Opsive.UltimateCharacterController.Demo
 
         //[ReadOnly] public EventHandler OnBattleStarted;
         public event EventHandler OnBattleStarted;
+        public UnityEvent EventsOnBattleStarted;
         //[ReadOnly] public EventHandler OnBattleEnded;
         public event EventHandler OnBattleEnded;
+        public UnityEvent EventsOnBattleEnded;
 
         private enum State
         {
@@ -60,9 +63,12 @@ namespace Opsive.UltimateCharacterController.Demo
 
         private void Start()
         {
-            Debug.Log("Battle Registered");
-            startBattleTrigger.OnPlayerTriggerEnter += StartBattleTrigger_OnPlayerTriggerEnter;
-            //EventHandler.RegisterEvent("StartBattleTrigger_OnPlayerTriggerEnter", StartBattleTrigger_OnPlayerTriggerEnter);
+            if (startBattleTrigger != null)
+            {
+                Debug.Log("Battle Registered");
+                startBattleTrigger.OnPlayerTriggerEnter += StartBattleTrigger_OnPlayerTriggerEnter;
+                //EventHandler.RegisterEvent("StartBattleTrigger_OnPlayerTriggerEnter", StartBattleTrigger_OnPlayerTriggerEnter);
+            }
         }
 
         private void StartBattleTrigger_OnPlayerTriggerEnter(object sender, System.EventArgs e)
@@ -90,6 +96,12 @@ namespace Opsive.UltimateCharacterController.Demo
                             SpawnWave(wave);
                         }
                     }
+
+                    //if ()
+                    //{
+                    //
+                    //}
+
                     break;
             }
         }
@@ -117,8 +129,15 @@ namespace Opsive.UltimateCharacterController.Demo
             foreach (DemoAgent enemyAgent in waveSpawnEnemyList)
             {
                 enemyAgent.Spawn();
-                //enemyAgent.OnDead += DemoAgent_OnDead;
                 enemyAgentList.Add(enemyAgent);
+            }
+        }
+
+        private void DespawnEnemies()
+        {
+            foreach (DemoAgent enemyAgent in enemyAgentList)
+            {
+                enemyAgent.gameObject.SetActive(false);
             }
         }
 
@@ -126,34 +145,47 @@ namespace Opsive.UltimateCharacterController.Demo
         {
             state = State.Active;
 
-            //if (doorAnims != null)
-            //{
-            //    doorAnims.SetColor(DoorAnims.ColorName.Red);
-            //    doorAnims.CloseDoor();
-            //}
-
             //EventHandler.ExecuteEvent("OnBattleStarted");
+            EventsOnBattleStarted.Invoke();
             OnBattleStarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void StartBattle_ManualOverride()
+        {
+            StartBattle();
         }
 
         private void EndBattle()
         {
-            //if (doorAnims != null)
-            //{
-            //    doorAnims.SetColor(DoorAnims.ColorName.Green);
-            //    FunctionTimer.Create(doorAnims.OpenDoor, 1.5f);
-            //}
+            state = State.BattleOver;
+            EventsOnBattleEnded.Invoke();
 
             //EventHandler.ExecuteEvent("OnBattleEnded");
+            DespawnEnemies();
             OnBattleEnded?.Invoke(this, EventArgs.Empty);
         }
 
-        private void EnemySpawn_OnDead(object sender, System.EventArgs e)
+        public void EndBattle_ManualOverride()
         {
-            TestBattleOver();
+            EndBattle();
         }
 
-        private void TestBattleOver()
+        public void ResetBattle()
+        {
+            state = State.WaitingToSpawn;
+
+            if (startBattleTrigger != null)
+            {
+                GetComponent<BoxCollider>().enabled = true;
+            }
+
+            foreach (Wave wave in waveArray)
+            {
+                wave.alreadySpawned = false;
+            }
+        }
+
+        public void BattleOver()
         {
             foreach (DemoAgent enemySpawn in enemyAgentList)
             {

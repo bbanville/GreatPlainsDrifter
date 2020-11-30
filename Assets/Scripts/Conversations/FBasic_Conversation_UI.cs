@@ -31,7 +31,7 @@ namespace FIMSpace.FBasics
 
         void Start()
         {
-            Cursor.visible = true;
+            //Cursor.visible = true;
         }
     }
 }

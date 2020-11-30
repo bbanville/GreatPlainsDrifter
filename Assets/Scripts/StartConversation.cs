@@ -48,8 +48,8 @@ public class StartConversation : MonoBehaviour
 
     public void InitiateConversation()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        //Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.None;
 
         Player.GetComponent<ThirdPersonUserControl>().readPlayerInput = false;
         Player.GetComponentInChildren<SkinnedMeshRenderer>().gameObject.SetActive(false);

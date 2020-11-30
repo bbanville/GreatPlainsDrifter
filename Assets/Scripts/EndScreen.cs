@@ -13,44 +13,30 @@ namespace Assets.Scripts
     {
         [SerializeField] List<EndScreenItem> endScreenItems;
 
-        KeyboardMovement _playerMovement;
-        MouseRotation _playerMouseRotation;
-        LockMouse _playerMouseLock;
-        Animator _animator;
-        float Timer;
+        [SerializeField] protected TextMeshProUGUI GameTimeText;
+        [SerializeField] protected TextMeshProUGUI EnemyKillsText;
+        [SerializeField] protected TextMeshProUGUI WeaponsFoundText;
+        [SerializeField] protected TextMeshProUGUI SecretsFoundText;
 
-        public float BestTime;
-        public float NextBestTime;
+        Animator _animator;
 
         // Start is called before the first frame update
         void Start()
         {
-            var _player = GameObject.FindGameObjectWithTag("Player");
-
-            _playerMovement = _player.GetComponent<KeyboardMovement>();
-            _playerMouseRotation = _player.GetComponent<MouseRotation>();
-            _playerMouseLock = _player.GetComponent<LockMouse>();
-            _animator = GetComponent<Animator>();
+            SetEndScreenValues();
         }
 
         void Update()
         {
-            Timer += Time.deltaTime;
+
         }
 
-        public void LevelComplete()
+        public void SetEndScreenValues()
         {
-            _playerMovement.enabled = false;
-            _playerMouseRotation.enabled = false;
-            _playerMouseLock.enabled = false;
-
-            NextBestTime = Timer;
-            if (NextBestTime > BestTime)
-            {
-                BestTime = NextBestTime;
-            }
-
-            _animator.Play("EndScreen");
+            GameTimeText.text = GameManager.Instance.GameTimeFormatted;
+            EnemyKillsText.text = GameManager.Instance.EnemyKills.ToString() + " / " + GameManager.Instance.TotalEnemies;
+            WeaponsFoundText.text = GameManager.Instance.WeaponsFound.ToString() + " / " + GameManager.Instance.TotalWeapons;
+            SecretsFoundText.text = GameManager.Instance.SecretsFound.ToString() + " / " + GameManager.Instance.TotalSecrets;
         }
     }
 
@@ -58,7 +44,8 @@ namespace Assets.Scripts
     public class EndScreenItem
     {
         public string Name;
-        public List<GameObject> itemObject;
+        public GameObject itemContainer;
+        public TextMeshProUGUI itemText;
         public AudioClip clipToPlay;
         public float nextItemDelay;
     }
